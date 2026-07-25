@@ -1,4 +1,4 @@
-import Lead from "../models/lead.model.js";
+import Lead from "../model/lead.model.js";
 
 // Fetch all leads with optional filter/search
 export const getAllLeads = async (query = {}) => {
