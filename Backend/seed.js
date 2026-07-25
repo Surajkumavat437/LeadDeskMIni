@@ -3,7 +3,7 @@ dotenv.config();
 
 import mongoose from "mongoose";
 import connect from "./config/db.js";
-import Admin from "./Model/admin.model.js";
+import Admin from "./model/admin.model.js";
 import { hashPassword } from "./utils/hash.js";
 
 const seedAdmin = async () => {
