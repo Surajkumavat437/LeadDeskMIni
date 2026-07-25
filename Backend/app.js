@@ -9,8 +9,8 @@ const app = express();
 // 1. CORS Configuration for Credentials/Cookies
 app.use(
   cors({
-    origin: "http://localhost:5173", // Exact frontend origin (NO trailing slash)
-    credentials: true, // Allows browser to pass HTTP-only cookies
+    origin: process.env.CLIENT_ORIGIN || "http://localhost:5173",
+    credentials: true,
   }),
 );
 
