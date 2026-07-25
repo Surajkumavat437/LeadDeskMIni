@@ -1,6 +1,6 @@
 import { hashPassword, verifyPassword } from "../utils/hash.js";
 import { generateToken } from "../utils/jwt.js";
-import Admin from "../Model/admin.model.js";
+import Admin from "../model/admin.model.js";
 
 // 1. Create Admin
 export const createAdmin = async (name, email, plainPassword) => {
