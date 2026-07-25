@@ -29,7 +29,7 @@ const leadSchema = new mongoose.Schema(
       trim: true,
     },
     message: {
-      type: String, // 👈 Added message field
+      type: String,
       required: [true, "Message is required"],
       trim: true,
     },
@@ -43,7 +43,7 @@ const leadSchema = new mongoose.Schema(
     },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: "Admin",
     },
   },
   { timestamps: true },
