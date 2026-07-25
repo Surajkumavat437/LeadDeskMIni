@@ -133,6 +133,17 @@ export function useLeads() {
     startIndex + itemsPerPage,
   );
 
+  const handleDeleteLead = async (id) => {
+    try {
+      setLeads((prev) => prev.filter((lead) => lead.id !== id));
+
+      await api.delete(`/leads/${id}`);
+    } catch (err) {
+      console.error("Failed to delete lead:", err);
+
+      fetchLeads();
+    }
+  };
   return {
     loading,
     error,
@@ -146,6 +157,7 @@ export function useLeads() {
     handleSearchChange,
     handleFilterChange,
     handleStatusChange,
+    handleDeleteLead,
     refetchLeads: fetchLeads,
   };
 }

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import {
   User,
   Mail,
+  Phone,
   Wallet,
   Edit3,
   Send,
@@ -15,6 +16,7 @@ export default function LeadCaptureForm() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    phone: "",
     budget: "",
     message: "",
   });
@@ -31,7 +33,7 @@ export default function LeadCaptureForm() {
     try {
       await api.post("/leads", formData);
       setSubmitted(true);
-      setFormData({ name: "", email: "", budget: "", message: "" });
+      setFormData({ name: "", email: "", phone: "", budget: "", message: "" });
     } catch (err) {
       setError(
         err.response?.data?.message ||
@@ -93,6 +95,8 @@ export default function LeadCaptureForm() {
               <input
                 type="text"
                 required
+                pattern="[a-zA-Z\s]+"
+                title="Name should only contain letters and spaces"
                 placeholder="Enter your full name"
                 value={formData.name}
                 onChange={(e) =>
@@ -126,7 +130,32 @@ export default function LeadCaptureForm() {
             </div>
           </div>
 
-          {/* Budget Range */}
+          {/* Phone Number with Regex Validation */}
+          <div>
+            <label className="block text-xs font-bold text-slate-700 mb-1.5">
+              Phone Number
+            </label>
+            <div className="relative">
+              <Phone
+                size={16}
+                className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"
+              />
+              <input
+                type="tel"
+                required
+                pattern="^[0-9+\-\s()]{7,15}$"
+                title="Please enter a valid phone number (digits, spaces, +, -, parentheses allowed)"
+                placeholder="Enter your phone number"
+                value={formData.phone}
+                onChange={(e) =>
+                  setFormData({ ...formData, phone: e.target.value })
+                }
+                className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 py-3 pl-10 pr-4 text-xs font-medium text-slate-800 placeholder-slate-400 transition focus:border-indigo-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-100"
+              />
+            </div>
+          </div>
+
+          {/* Budget Range - Passing text label instead of raw numbers */}
           <div>
             <label className="block text-xs font-bold text-slate-700 mb-1.5">
               Budget Range
@@ -147,9 +176,9 @@ export default function LeadCaptureForm() {
                 <option value="" disabled>
                   Select your budget range
                 </option>
-                <option value="30000">₹10k - ₹50k</option>
-                <option value="75000">₹50k - ₹1L</option>
-                <option value="150000">₹1L+</option>
+                <option value="₹10k - ₹50k">₹10k - ₹50k</option>
+                <option value="₹50k - ₹1L">₹50k - ₹1L</option>
+                <option value="₹1L+">₹1L+</option>
               </select>
             </div>
           </div>
@@ -167,7 +196,8 @@ export default function LeadCaptureForm() {
               <textarea
                 required
                 rows={3}
-                placeholder="Tell us about your project..."
+                minLength={10}
+                placeholder="Tell us about your project (min 10 characters)..."
                 value={formData.message}
                 onChange={(e) =>
                   setFormData({ ...formData, message: e.target.value })

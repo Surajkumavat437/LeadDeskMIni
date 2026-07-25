@@ -16,10 +16,21 @@ const leadSchema = new mongoose.Schema(
     },
     phone: {
       type: String,
+      required: [true, "Phone number is required"],
       trim: true,
     },
     company: {
       type: String,
+      trim: true,
+    },
+    budget: {
+      type: String,
+      required: [true, "Budget range is required"],
+      trim: true,
+    },
+    message: {
+      type: String, // 👈 Added message field
+      required: [true, "Message is required"],
       trim: true,
     },
     status: {

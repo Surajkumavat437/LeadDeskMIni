@@ -24,6 +24,7 @@ export default function DashboardPage() {
     handleFilterChange,
     handleStatusChange,
     refetchLeads,
+    handleDeleteLead,
   } = useLeads();
 
   return (
@@ -87,6 +88,7 @@ export default function DashboardPage() {
                 <LeadsTable
                   leads={paginatedLeads}
                   onStatusChange={handleStatusChange}
+                  onDelete={handleDeleteLead}
                 />
                 <Pagination
                   currentPage={currentPage}

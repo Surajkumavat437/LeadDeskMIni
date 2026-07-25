@@ -1,10 +1,11 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { Toaster } from "react-hot-toast"; // 👈 Added Toaster import
+import { Toaster } from "react-hot-toast";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import LoginPage from "./pages/LoginPage";
 import DashboardPage from "./pages/DashboardPage";
 import LandingPage from "./pages/LandingPage";
+import NotFound from "./pages/NotFound.jsx";
 
 export default function App() {
   return (
@@ -36,8 +37,8 @@ export default function App() {
             <Route path="/dashboard" element={<DashboardPage />} />
           </Route>
 
-          {/* Catch-all Redirect back to Landing Page */}
-          <Route path="*" element={<Navigate to="/" replace />} />
+          {/* Custom 404 Not Found Page */}
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

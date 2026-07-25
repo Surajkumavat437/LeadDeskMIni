@@ -1,8 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import { Shield, Lock } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export default function Navbar() {
+  const [activeTab, setActiveTab] = useState("home");
+
+  const navLinks = [
+    { name: "Home", href: "#home", id: "home" },
+    { name: "How It Works", href: "#how-it-works", id: "how-it-works" },
+    { name: "Why Us", href: "#why-us", id: "why-us" },
+    { name: "Contact", href: "#contact", id: "contact" },
+  ];
+
   return (
     <header className="sticky top-0 z-40 w-full backdrop-blur-md bg-white/60 border-b border-indigo-100/40">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6 lg:px-10">
@@ -16,23 +25,25 @@ export default function Navbar() {
           </span>
         </div>
 
-        {/* Navigation Links */}
+        {/* Navigation Links with dynamic active state */}
         <nav className="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-600">
-          <a
-            href="#home"
-            className="text-indigo-600 hover:text-indigo-700 transition"
-          >
-            Home
-          </a>
-          <a href="#how-it-works" className="hover:text-indigo-600 transition">
-            How It Works
-          </a>
-          <a href="#why-us" className="hover:text-indigo-600 transition">
-            Why Us
-          </a>
-          <a href="#contact" className="hover:text-indigo-600 transition">
-            Contact
-          </a>
+          {navLinks.map((link) => {
+            const isActive = activeTab === link.id;
+            return (
+              <a
+                key={link.id}
+                href={link.href}
+                onClick={() => setActiveTab(link.id)}
+                className={`transition-colors ${
+                  isActive
+                    ? "text-indigo-600 font-bold"
+                    : "text-slate-600 hover:text-indigo-600"
+                }`}
+              >
+                {link.name}
+              </a>
+            );
+          })}
         </nav>
 
         {/* Admin Login Button */}
