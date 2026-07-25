@@ -30,9 +30,11 @@ export default function LoginCard() {
     setError(null);
     try {
       const data = await loginAdmin(credentials);
-      const authUser = data.user || data.data || data.admin || {
-        email: credentials.email,
-      };
+      const authUser = data.user ||
+        data.data ||
+        data.admin || {
+          email: credentials.email,
+        };
       const authToken = data.token || data.accessToken || null;
 
       // 1. Save state and token to global auth context
@@ -41,12 +43,18 @@ export default function LoginCard() {
       // 2. Redirect to dashboard on success
       navigate("/dashboard", { replace: true });
     } catch (err) {
+      console.log("FULL ERROR:", err);
+      console.log("ERR MESSAGE:", err.message);
+      console.log("ERR CODE:", err.code);
+      console.log("ERR RESPONSE:", err.response);
+      console.log("ERR REQUEST:", err.request);
+
       const apiMessage =
         err.response?.data?.message ||
+        err.message ||
         "Failed to connect to authentication server";
+
       setError(apiMessage);
-    } finally {
-      setLoading(false);
     }
   };
 
