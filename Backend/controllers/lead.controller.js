@@ -1,4 +1,5 @@
 import Lead from "../model/lead.model.js";
+import { VALID_LEAD_STATUSES } from "../constant/lead-status.js";
 
 // 1. Create Lead
 export const createLead = async (req, res) => {
@@ -9,7 +10,7 @@ export const createLead = async (req, res) => {
       name,
       email,
       phone,
-      budget: budget ? Number(budget) : 0,
+      budget: budget.trim(),
       message,
     });
 
@@ -47,6 +48,13 @@ export const updateLeadStatus = async (req, res) => {
   try {
     const { id } = req.params;
     const { status } = req.body;
+
+    if (!VALID_LEAD_STATUSES.includes(status)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid lead status",
+      });
+    }
 
     const lead = await Lead.findByIdAndUpdate(
       id,

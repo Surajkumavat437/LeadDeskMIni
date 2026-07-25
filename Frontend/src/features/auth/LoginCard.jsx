@@ -30,13 +30,13 @@ export default function LoginCard() {
     setError(null);
     try {
       const data = await loginAdmin(credentials);
+      const authUser = data.user || data.data || data.admin || {
+        email: credentials.email,
+      };
+      const authToken = data.token || data.accessToken || null;
 
       // 1. Save state and token to global auth context
-      login(
-        data.user || { email: credentials.email },
-        data.token,
-        credentials.remember,
-      );
+      login(authUser, authToken, credentials.remember);
 
       // 2. Redirect to dashboard on success
       navigate("/dashboard", { replace: true });

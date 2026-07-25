@@ -9,7 +9,7 @@ import { protect } from "../middlewares/auth.middleware.js";
 const router = Router();
 
 router.post("/login", loginController);
-router.post("/logout", protect, logoutController);
+router.post("/logout", logoutController);
 router.get("/me", protect, getMeController);
 
 export default router;

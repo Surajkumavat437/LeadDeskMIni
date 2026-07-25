@@ -7,6 +7,6 @@ export const getLeads = async (params) => {
 };
 
 export const updateLeadStatus = async (id, status) => {
-  const response = await api.put(`/leads/${id}`, { status });
+  const response = await api.patch(`/leads/${id}/status`, { status });
   return response.data;
 };

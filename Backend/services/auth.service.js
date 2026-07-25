@@ -4,7 +4,8 @@ import Admin from "../model/admin.model.js";
 
 // 1. Create Admin
 export const createAdmin = async (name, email, plainPassword) => {
-  const existAdmin = await Admin.findOne({ email });
+  const normalizedEmail = email.trim().toLowerCase();
+  const existAdmin = await Admin.findOne({ email: normalizedEmail });
   if (existAdmin) {
     throw new Error("This Email already Exists");
   }
@@ -16,7 +17,8 @@ export const createAdmin = async (name, email, plainPassword) => {
 
   const admin = await Admin.create({
     name,
-    email,
+    email: normalizedEmail,
+    role: "admin",
     password: hashedPassword,
   });
 
@@ -27,7 +29,10 @@ export const createAdmin = async (name, email, plainPassword) => {
 
 // 2. Login Admin
 export const loginAdmin = async (email, password) => {
-  const admin = await Admin.findOne({ email }).select("+password");
+  const normalizedEmail = email.trim().toLowerCase();
+  const admin = await Admin.findOne({ email: normalizedEmail }).select(
+    "+password",
+  );
   if (!admin) {
     throw new Error("Invalid credentials");
   }
@@ -37,7 +42,11 @@ export const loginAdmin = async (email, password) => {
     throw new Error("Invalid credentials");
   }
 
-  const token = generateToken({ id: admin._id, email: admin.email });
+  const token = generateToken({
+    id: admin._id,
+    email: admin.email,
+    role: admin.role || "admin",
+  });
 
   const adminObj = admin.toObject();
   delete adminObj.password;

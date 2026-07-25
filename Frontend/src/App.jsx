@@ -32,9 +32,14 @@ export default function App() {
           {/* Admin Login */}
           <Route path="/login" element={<LoginPage />} />
 
-          {/* Protected Admin Routes */}
+          {/* Protected Admin Routes matching the /admin requirement */}
           <Route element={<ProtectedRoute />}>
-            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/admin" element={<DashboardPage />} />
+            {/* Optional redirect so old dashboard links still work */}
+            <Route
+              path="/dashboard"
+              element={<Navigate to="/admin" replace />}
+            />
           </Route>
 
           {/* Custom 404 Not Found Page */}

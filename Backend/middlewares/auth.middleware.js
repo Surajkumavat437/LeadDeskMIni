@@ -2,23 +2,28 @@ import { verifyToken } from "../utils/jwt.js";
 
 export const protect = async (req, res, next) => {
   try {
-    // Check cookie first, fallback to Authorization header
-    const token =
-      req.cookies?.token ||
-      (req.headers.authorization?.startsWith("Bearer ")
-        ? req.headers.authorization.split(" ")[1]
-        : null);
+    const authHeader = req.headers.authorization;
+    const bearerToken = authHeader?.startsWith("Bearer ")
+      ? authHeader.split(" ")[1]
+      : null;
+    const cookieToken = req.cookies?.token || null;
+    const tokens = [bearerToken, cookieToken].filter(Boolean);
 
-    if (!token) {
+    if (tokens.length === 0) {
       return res.status(401).json({
         success: false,
         message: "Not authorized, no token provided",
       });
     }
 
-    const decoded = verifyToken(token);
+    let decoded = null;
+    for (const token of tokens) {
+      decoded = verifyToken(token);
+      if (decoded) {
+        break;
+      }
+    }
 
-    // Guard against null/invalid tokens returned by verifyToken
     if (!decoded) {
       return res.status(401).json({
         success: false,
@@ -34,4 +39,17 @@ export const protect = async (req, res, next) => {
       message: "Not authorized, token failed",
     });
   }
+};
+
+export const authorizeRoles = (...allowedRoles) => (req, res, next) => {
+  const role = req.user?.role || "admin";
+
+  if (!allowedRoles.includes(role)) {
+    return res.status(403).json({
+      success: false,
+      message: "Forbidden: insufficient permissions",
+    });
+  }
+
+  next();
 };

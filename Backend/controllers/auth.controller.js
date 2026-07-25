@@ -1,5 +1,13 @@
 import { loginAdmin } from "../services/auth.service.js";
 
+const getCookieOptions = () => ({
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+  path: "/",
+  maxAge: 7 * 24 * 60 * 60 * 1000,
+});
+
 export const loginController = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -13,17 +21,14 @@ export const loginController = async (req, res) => {
 
     const { admin, token } = await loginAdmin(email, password);
 
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: false, // Set to true in production with HTTPS
-      sameSite: "lax",
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-    });
+    res.cookie("token", token, getCookieOptions());
 
     return res.status(200).json({
       success: true,
       message: "Login successful",
+      user: admin,
       data: admin,
+      token,
     });
   } catch (err) {
     return res.status(401).json({
@@ -35,12 +40,7 @@ export const loginController = async (req, res) => {
 
 export const logoutController = async (req, res) => {
   try {
-    // Matching options from loginController so the browser actually deletes it
-    res.clearCookie("token", {
-      httpOnly: true,
-      secure: false,
-      sameSite: "lax",
-    });
+    res.clearCookie("token", getCookieOptions());
 
     return res.status(200).json({
       success: true,
