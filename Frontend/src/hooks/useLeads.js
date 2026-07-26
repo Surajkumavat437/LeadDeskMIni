@@ -100,8 +100,8 @@ export function useLeads() {
     }
   };
 
-  const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value);
+  const handleSearchChange = (value) => {
+    setSearchTerm(value);
     setCurrentPage(1);
   };
 
