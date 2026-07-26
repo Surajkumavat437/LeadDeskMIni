@@ -25,8 +25,25 @@ export default function LeadCaptureForm() {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState(null);
 
+  // Handle phone changes to allow only digits and strict 10-digit limit
+  const handlePhoneChange = (e) => {
+    const rawValue = e.target.value;
+    // Strip everything that isn't a digit
+    const digitsOnly = rawValue.replace(/\D/g, "");
+    // Cap at a maximum of 10 digits
+    const limitedDigits = digitsOnly.slice(0, 10);
+    setFormData({ ...formData, phone: limitedDigits });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Extra guard check for phone length
+    if (formData.phone.length !== 10) {
+      setError("Phone number must be exactly 10 digits.");
+      return;
+    }
+
     setLoading(true);
     setError(null);
 
@@ -130,10 +147,10 @@ export default function LeadCaptureForm() {
             </div>
           </div>
 
-          {/* Phone Number with Regex Validation */}
+          {/* Phone Number - Strict Number & Max 10 digits validation */}
           <div>
             <label className="block text-xs font-bold text-slate-700 mb-1.5">
-              Phone Number
+              Phone Number (10 digits)
             </label>
             <div className="relative">
               <Phone
@@ -141,21 +158,19 @@ export default function LeadCaptureForm() {
                 className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"
               />
               <input
-                type="tel"
+                type="text"
+                inputMode="numeric"
                 required
-                pattern="^[0-9+\-\s()]{7,15}$"
-                title="Please enter a valid phone number (digits, spaces, +, -, parentheses allowed)"
-                placeholder="Enter your phone number"
+                maxLength={10}
+                placeholder="Enter 10-digit mobile number"
                 value={formData.phone}
-                onChange={(e) =>
-                  setFormData({ ...formData, phone: e.target.value })
-                }
+                onChange={handlePhoneChange}
                 className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 py-3 pl-10 pr-4 text-xs font-medium text-slate-800 placeholder-slate-400 transition focus:border-indigo-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-100"
               />
             </div>
           </div>
 
-          {/* Budget Range - Passing text label instead of raw numbers */}
+          {/* Budget Range */}
           <div>
             <label className="block text-xs font-bold text-slate-700 mb-1.5">
               Budget Range
