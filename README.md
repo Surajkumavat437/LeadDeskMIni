@@ -40,7 +40,7 @@ admin@example.com
 **Password**
 
 ```text
-Admin@12345
+AdminPassword123!
 ```
 
 ---
