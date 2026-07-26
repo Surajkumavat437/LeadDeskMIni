@@ -55,6 +55,9 @@ export default function LoginCard() {
         "Failed to connect to authentication server";
 
       setError(apiMessage);
+    } finally {
+      // GUARANTEES THE SPINNER STOPS NO MATTER WHAT HAPPENS
+      setLoading(false);
     }
   };
 

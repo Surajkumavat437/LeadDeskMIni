@@ -1,5 +1,5 @@
 import Admin from "../model/admin.model.js";
-import { verifyPassword } from "../utils/password.js";
+import { verifyPassword } from "../utils/hash.js";
 import { generateToken } from "../utils/jwt.js";
 
 export const loginAdmin = async (email, password) => {
@@ -7,9 +7,9 @@ export const loginAdmin = async (email, password) => {
 
   console.log("Email entered:", normalizedEmail);
 
-  const admin = await Admin.findOne({ email: normalizedEmail }).select(
-    "+password",
-  );
+  const admin = await Admin.findOne({
+    email: normalizedEmail,
+  }).select("+password");
 
   console.log("Admin found:", !!admin);
 
@@ -34,5 +34,8 @@ export const loginAdmin = async (email, password) => {
   const adminObj = admin.toObject();
   delete adminObj.password;
 
-  return { admin: adminObj, token };
+  return {
+    admin: adminObj,
+    token,
+  };
 };

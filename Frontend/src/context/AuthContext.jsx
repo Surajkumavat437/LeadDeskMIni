@@ -17,18 +17,25 @@ export function AuthProvider({ children }) {
 
         if (token) {
           api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+        } else {
+          setLoading(false);
+          return;
         }
 
         const response = await api.get("/auth/me");
 
-        // FIX: Check for response.data.user OR response.data.data
-        const userData = response.data?.user || response.data?.data;
+        // Safely extract user data from various possible response structures
+        const userData =
+          response.data?.user ||
+          response.data?.data ||
+          response.data?.admin ||
+          response.data;
 
-        if (userData) {
+        if (userData && typeof userData === "object") {
           setUser(userData);
         }
       } catch (err) {
-        console.warn("Session expired or no active session.");
+        console.warn("Session expired or no active session:", err.message);
         localStorage.removeItem("authToken");
         sessionStorage.removeItem("authToken");
         delete api.defaults.headers.common["Authorization"];
@@ -42,7 +49,10 @@ export function AuthProvider({ children }) {
   }, []);
 
   const login = (userData, token, remember) => {
-    setUser(userData);
+    // Ensure we have a valid user object to set
+    const validUser = userData?.user || userData?.data || userData;
+    setUser(validUser);
+
     if (token) {
       if (remember) {
         localStorage.setItem("authToken", token);

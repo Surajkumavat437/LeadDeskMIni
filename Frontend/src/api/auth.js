@@ -1,5 +1,4 @@
-// src/api/auth.js
-import api from "./axios"; //
+import api from "./axios.js"; //
 
 export const loginAdmin = async (credentials) => {
   const response = await api.post("/auth/login", credentials);
