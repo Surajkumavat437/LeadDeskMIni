@@ -34,7 +34,7 @@ export default function SearchFilter({
         >
           <option value="All">All Status</option>
           <option value="New">New</option>
-          <option value="Contacted">Contacted</option>
+          <option value="In Progress">In Progress</option>
           <option value="Closed">Closed</option>
         </select>
         <ChevronDown
